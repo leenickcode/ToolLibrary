@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.lee.mylibrary.ItemClickListener
 import com.lee.toollibrary.adapters.ViewAdapter
+import com.lee.toollibrary.viewAty.ProcessImageAty
 import kotlinx.android.synthetic.main.faragment_view.*
 
 /**
@@ -52,6 +53,10 @@ class ViewFragment : BaseFragment() {
             override fun onClick(position: Int, view: View?, data: Any?) {
 
                 when (position) {
+                    6 ->{
+                        val intent = Intent(activity, ProcessImageAty::class.java)
+                        startActivity(intent)
+                    }
                     7 -> {
                         val intent = Intent(activity, TabActivity::class.java)
                         intent.putExtra("type", position)

@@ -12,7 +12,7 @@ import android.widget.ImageView;
 
 /**
  * Created by nicklxz on 2017/11/21.
- *  * 进度条image view
+ *  * 进度条image view  一般用于上传暂时进度
  */
 
 @SuppressLint("AppCompatCustomView")

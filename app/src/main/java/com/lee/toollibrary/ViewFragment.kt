@@ -60,6 +60,10 @@ class ViewFragment : BaseFragment() {
                 "圆形imageView"->{
 
                 }
+                "Dialog"->{
+                    val intent = Intent(activity, DialogActivity::class.java)
+                    startActivity(intent)
+                }
                 "九宫格imageView"->{
 
                 }
@@ -69,7 +73,6 @@ class ViewFragment : BaseFragment() {
                 }
                 "自定义短线Tab"->{
                     val intent = Intent(activity, TabActivity::class.java)
-//                    intent.putExtra("type", data)
                     startActivity(intent)
                 }
                 "下拉列表"->{

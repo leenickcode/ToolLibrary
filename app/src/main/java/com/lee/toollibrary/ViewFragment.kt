@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import com.lee.mylibrary.ItemClickListener
 import com.lee.toollibrary.adapters.ViewAdapter
 import com.lee.toollibrary.viewAty.ProcessImageAty
+import com.lee.toollibrary.viewAty.ViewActivity
 import kotlinx.android.synthetic.main.faragment_view.*
 
 /**

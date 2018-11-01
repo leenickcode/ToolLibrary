@@ -26,5 +26,5 @@ abstract class BaseActivity : AppCompatActivity() {
      * 设计时间监听
      */
     protected abstract fun setListener()
-
+    protected abstract fun business()
 }

@@ -23,7 +23,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ViewActivity" />
+        <activity android:name=".viewAty.ViewActivity" />
         <activity android:name=".TestActivity"></activity>
         <activity android:name=".TabActivity" />
         <activity android:name=".viewAty.ProcessImageAty" />

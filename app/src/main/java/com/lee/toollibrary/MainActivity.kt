@@ -14,6 +14,9 @@ import java.util.ArrayList
 
 
 class MainActivity : BaseActivity() {
+    override fun business() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     /**
      * 当前下标
@@ -48,6 +51,7 @@ class MainActivity : BaseActivity() {
         val items = ArrayList<BottomItem>()
         items.add(BottomItem("Views", R.drawable.bottom_view_def, R.drawable.bottom_view_pre))
         items.add(BottomItem("转换", R.drawable.bottom_convert_def, R.drawable.bottom_convert_pre))
+        print("")
         return items
     }
 

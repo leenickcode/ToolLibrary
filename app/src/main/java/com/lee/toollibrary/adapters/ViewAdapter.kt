@@ -15,7 +15,8 @@ import kotlinx.android.synthetic.main.item_views.view.*
 class ViewAdapter(mContext: Context?, mDefaultItemLayoutId: Int) : BaseRecyclerViewAdapter<String>(mContext, mDefaultItemLayoutId) {
     override fun bindData(holder: UniversalViewHolder?, position: Int, bean: String?) {
         print("哈哈")
-        holder!!.getTextView(R.id.textView).text = bean
+
+
     }
 
     override fun setItemChildListener(helper: UniversalViewHolder?, viewType: Int) {

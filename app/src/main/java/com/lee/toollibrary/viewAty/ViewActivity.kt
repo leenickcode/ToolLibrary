@@ -1,8 +1,8 @@
-package com.lee.toollibrary
+package com.lee.toollibrary.viewAty
 
-import android.content.Intent
 import android.view.View
-import com.lee.toollibrary.viewAty.ProcessImageAty
+import com.lee.toollibrary.BaseActivity
+import com.lee.toollibrary.R
 import com.lee.toollibrary.views.NineImageView
 import kotlinx.android.synthetic.main.activity_view.*
 

@@ -9,6 +9,10 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.activity_tab.*
 
 class TabActivity : BaseActivity() {
+    override fun business() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun getLayoutId(): Int {
         return R.layout.activity_tab
     }

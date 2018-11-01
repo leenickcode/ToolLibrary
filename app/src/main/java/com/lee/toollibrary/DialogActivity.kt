@@ -7,6 +7,9 @@ import com.lee.toollibrary.dialogs.PikerDialogFragment
 import kotlinx.android.synthetic.main.activity_dialog.*
 
 class DialogActivity : BaseActivity() {
+    override fun business() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     val mAdapter = DialogAdapter(this, R.layout.item_views)
     var mData = mutableListOf<String>()

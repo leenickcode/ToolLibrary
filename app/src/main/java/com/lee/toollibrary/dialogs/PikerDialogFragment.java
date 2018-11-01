@@ -2,8 +2,6 @@ package com.lee.toollibrary.dialogs;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -15,7 +13,6 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.lee.toollibrary.R;
-import com.lee.toollibrary.views.WheelPicker;
 
 import java.util.ArrayList;
 

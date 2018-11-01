@@ -206,6 +206,8 @@ public class WheelPicker<T> extends View {
 
     private Handler mHandler = new Handler();
 
+
+
     private OnWheelChangeListener<T> mOnWheelChangeListener;
 
     private Runnable mScrollerRunnable = new Runnable() {
@@ -291,7 +293,10 @@ public class WheelPicker<T> extends View {
         mIndicatorTextSize = a.getDimensionPixelSize(R.styleable.WheelPicker_indicatorTextSize, mTextSize);
         a.recycle();
     }
-
+    //是否在滑动
+    public boolean getScoll(){
+        return mScroller.isFinished();
+    }
     public void computeTextSize() {
         mTextMaxWidth = mTextMaxHeight = 0;
         if (mDataList.size() == 0) {
@@ -501,6 +506,7 @@ public class WheelPicker<T> extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+
         if (mTracker == null) {
             mTracker = VelocityTracker.obtain();
         }
@@ -809,7 +815,7 @@ public class WheelPicker<T> extends View {
 //            mScroller.setFinalY(mScroller.getFinalY() +
 //                    computeDistanceToEndPoint(mScroller.getFinalY() % mItemHeight));
             int finalY = -currentPosition * mItemHeight;
-            mCurrentPosition=currentPosition;
+//            mCurrentPosition=currentPosition;
             mScroller.setFinalY(finalY);
             mHandler.post(mScrollerRunnable);
         } else {

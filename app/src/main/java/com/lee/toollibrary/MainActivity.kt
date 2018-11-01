@@ -51,7 +51,7 @@ class MainActivity : BaseActivity() {
         val items = ArrayList<BottomItem>()
         items.add(BottomItem("Views", R.drawable.bottom_view_def, R.drawable.bottom_view_pre))
         items.add(BottomItem("转换", R.drawable.bottom_convert_def, R.drawable.bottom_convert_pre))
-        print("")
+        print("aaaa")
         return items
     }
 

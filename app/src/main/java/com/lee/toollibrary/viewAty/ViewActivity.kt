@@ -12,6 +12,10 @@ import kotlinx.android.synthetic.main.activity_view.*
  * 展示各种自定义View的Activity
  */
 class ViewActivity : BaseActivity() {
+    override fun business() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     val ddvList: MutableList<String> = mutableListOf()
     override fun getLayoutId(): Int {
         return R.layout.activity_view

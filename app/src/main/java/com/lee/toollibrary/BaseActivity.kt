@@ -10,6 +10,7 @@ abstract class BaseActivity : AppCompatActivity() {
         setContentView(getLayoutId())
         init()
         setListener()
+        business()
     }
     /**
      * @return xml 布局id

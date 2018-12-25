@@ -15,7 +15,6 @@ import java.util.ArrayList
 
 class MainActivity : BaseActivity() {
     override fun business() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     /**

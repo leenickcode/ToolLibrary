@@ -1,4 +1,4 @@
-package com.lee.toollibrary.time;
+package com.lee.toollibrary.picker;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -18,7 +18,7 @@ import com.lee.toollibrary.R;
  * Created by ycuwq on 2018/1/22.
  */
 public class HourAndMinutePicker extends LinearLayout implements
-        HourPicker.OnHourSelectedListener, MinutePicker.OnMinuteSelectedListener {
+       HourPicker.OnHourSelectedListener,MinutePicker.OnMinuteSelectedListener {
 
     private HourPicker mHourPicker;
     private MinutePicker mMinutePicker;

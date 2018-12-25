@@ -24,4 +24,16 @@
         android:layout_weight="1"
         android:layout_width="0dp"
         android:layout_height="wrap_content" />
+    <com.lee.toollibrary.picker.HourPicker
+        android:id="@+id/hourPicker_layout_date"
+        app:halfVisibleItemCount="2"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content" />
+    <com.lee.toollibrary.picker.MinutePicker
+        android:id="@+id/minutePicker_layout_date"
+        app:halfVisibleItemCount="2"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content" />
 </LinearLayout>

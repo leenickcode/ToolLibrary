@@ -1,4 +1,4 @@
-package com.lee.toollibrary.date;
+package com.lee.toollibrary.picker;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -37,7 +37,7 @@ public class YearPicker extends WheelPicker<Integer> {
         setItemMaximumWidthText("0000");
         updateYear();
         setSelectedYear(mSelectedYear, false);
-        setOnWheelChangeListener(new WheelPicker.OnWheelChangeListener<Integer>() {
+        setOnWheelChangeListener(new OnWheelChangeListener<Integer>() {
             @Override
             public void onWheelSelected(Integer item, int position) {
             	mSelectedYear = item;

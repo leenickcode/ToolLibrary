@@ -1,4 +1,4 @@
-package com.lee.toollibrary.date;
+package com.lee.toollibrary.dialogs;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -14,10 +14,11 @@ import android.view.WindowManager;
 import android.widget.Button;
 
 import com.lee.toollibrary.R;
+import com.lee.toollibrary.picker.DatePicker;
 
 /**
  * 时间选择器，弹出框
- * Created by ycuwq on 2018/1/6.
+ * Created by nick on 2018/1/6.
  */
 public class DatePickerDialogFragment extends DialogFragment {
 
@@ -98,6 +99,12 @@ public class DatePickerDialogFragment extends DialogFragment {
 		return dialog;
 	}
 
+	/**
+	 * 设置当期当前选中时间
+	 * @param year  年
+	 * @param month 月
+	 * @param day 日
+	 */
 	public void setSelectedDate(int year, int month, int day) {
 		mSelectedYear = year;
 		mSelectedMonth = month;

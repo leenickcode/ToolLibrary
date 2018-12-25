@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 /**
  * Created by nick on 2018/8/30.
- *
+ * 单项选择器
  * @author nick
  */
 public class PikerDialogFragment extends DialogFragment {
@@ -35,7 +35,8 @@ public class PikerDialogFragment extends DialogFragment {
     /**
      * 布局宽高
      */
-    private int width,height;
+    private int width, height;
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final Dialog dialog = new Dialog(getActivity(), R.style.Dialog_Fullscreen);

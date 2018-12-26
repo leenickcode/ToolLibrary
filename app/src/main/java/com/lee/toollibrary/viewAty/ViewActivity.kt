@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.activity_view.*
  */
 class ViewActivity : BaseActivity() {
     override fun business() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 
     val ddvList: MutableList<String> = mutableListOf()

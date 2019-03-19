@@ -1,5 +1,9 @@
 package com.lee.toollibrary.utils;
 
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -125,4 +129,32 @@ public class ConvertUtil {
         return sb.toString();
     }
 
+    /**
+     * 根据日期得到周几
+     * @param dateString
+     * @return
+     */
+    public static  String getWeek(String dateString){
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");// 日期格式
+        Date date = null;
+        try {
+            date = format.parse(dateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("E");
+        String week = sdf.format(date);
+        return week;
+    }
+
+    /**
+     * 将数字格式化  比如1 变成01
+     * @param i
+     * @return
+     */
+    public static String formatNumber(int i){
+        DecimalFormat mFormat = new DecimalFormat("00");//确定格式，把1转换为01
+        String s = mFormat.format(i);
+        return s;
+    }
 }

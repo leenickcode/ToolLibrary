@@ -3,8 +3,10 @@ package com.lee.toollibrary
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.Window
+import com.lee.toollibrary.utils.ConvertUtil
 import com.lee.toollibrary.views.NineImageView
 import kotlinx.android.synthetic.main.activity_test.*
 
@@ -28,5 +30,7 @@ class TestActivity : AppCompatActivity() {
 //        list.add(picture4)
 //        nine.setTotalWidth( window.windowManager.defaultDisplay.width)
 //        nine.setPictures(list)
+        var aa="2019-03-18"
+        Log.d("aa",ConvertUtil.getWeek(aa))
     }
 }

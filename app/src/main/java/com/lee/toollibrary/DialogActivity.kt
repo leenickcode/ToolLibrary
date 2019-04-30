@@ -1,11 +1,9 @@
 package com.lee.toollibrary
 
+import android.content.DialogInterface
 import android.support.v7.widget.LinearLayoutManager
 import com.lee.toollibrary.adapters.DialogAdapter
-import com.lee.toollibrary.dialogs.DatePickerDialogFragment
-import com.lee.toollibrary.dialogs.DatePickerFiveDialogFragment
-import com.lee.toollibrary.dialogs.IosDefaultDialog
-import com.lee.toollibrary.dialogs.PikerDialogFragment
+import com.lee.toollibrary.dialogs.*
 import kotlinx.android.synthetic.main.activity_dialog.*
 
 class DialogActivity : BaseActivity() {
@@ -27,6 +25,7 @@ class DialogActivity : BaseActivity() {
         mData.add("通用")
         mData.add("年月日时分选择器")
         mData.add("日期选择器")
+        mData.add("加载框")
         mAdapter.data = mData
     }
 
@@ -35,8 +34,8 @@ class DialogActivity : BaseActivity() {
             var item=data
             when (item) {
                 "单项选择" -> {
-                    val pikerDialogFragment = PikerDialogFragment()
-                    pikerDialogFragment.show(fragmentManager, "哈哈")
+                   var pickerDialog =PickerDialog(this)
+                    pickerDialog.show()
                 }
                 "通用" -> {
                     var dialog = IosDefaultDialog(this)
@@ -44,12 +43,23 @@ class DialogActivity : BaseActivity() {
                     dialog.show()
                 }
                 "年月日时分选择器"->{
-                    var datePickerFiveDialogFragment = DatePickerFiveDialogFragment()
-                    datePickerFiveDialogFragment.show(supportFragmentManager,"年月日时分选择器")
+                    var fiveDatePickerDialog =FiveDatePickerDialog(this)
+                    fiveDatePickerDialog.show()
                 }
                 "日期选择器"->{
-                    var datePickerDialogFragment =DatePickerDialogFragment();
-                    datePickerDialogFragment.show(supportFragmentManager,"日期选择器")
+                    var datePickerDialog =DatePickerDialog(this)
+                    datePickerDialog.show()
+                }
+                "加载框"->{
+                    var  dialog= ProgressLoadingDialog.show(this, getResources().getString(R.string.loading),
+                            true, if (true)
+                        DialogInterface.OnCancelListener {
+                            //                            HttpUtils.cancelPost();
+
+                        }
+                    else
+                        null);
+                    dialog.show()
                 }
             }
         }

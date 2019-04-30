@@ -1,33 +1,31 @@
 package com.lee.toollibrary.dialogs;
 
-import android.app.Dialog;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
-import android.util.Log;
+import android.content.Context;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+
 import com.lee.toollibrary.R;
 import com.lee.toollibrary.picker.FivePicker;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /**
- * Created by nick on 2018/10/26.
- *  5个选择器合在一起  年月日时分
- * @author nick
- * @deprecated
+ * Created by Administrator on 2019/4/12.
+ *  年月日时分 5例选择器
+ * @author Administrator
  */
-public class DatePickerFiveDialogFragment extends DialogFragment {
+public class FiveDatePickerDialog {
+
+    private View contentView;
+    private AlertDialog alertDialog;
+    private Context mContext;
 
     protected FivePicker mDatePicker;
     private int mSelectedYear = -1, mSelectedMonth = -1, mSelectedDay = -1,mSelectedHours=-1,mSelectedMinute;
@@ -46,38 +44,40 @@ public class DatePickerFiveDialogFragment extends DialogFragment {
      * 上面的标题
      */
     private String pickerTitle;
-
+    private long minDate;
     private static final String TAG = "DatePickerFiveDialogFra";
     public void showAnimation(boolean show) {
         mIsShowAnimation = show;
     }
 
+    public FiveDatePickerDialog(Context mContext) {
+        this.mContext = mContext;
+    }
+
     public void setPickerTitle(String pickerTitle) {
         this.pickerTitle = pickerTitle;
     }
+    /**
+     * 初始化控件
+     */
+    private void initView() {
+        contentView = LayoutInflater.from(mContext).inflate(R.layout.dialog_picker_five, null);
+        tvDecide =contentView.findViewById(R.id.tv_ok);
+        tvCancel =contentView.findViewById(R.id.tv_cancel);
+        mDatePicker = contentView.findViewById(R.id.five_picker);
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_picker_five, container);
-        tvDecide =view.findViewById(R.id.tv_ok);
-        tvCancel =view.findViewById(R.id.tv_cancel);
-        mDatePicker = view.findViewById(R.id.five_picker);
-
-        tvTitle=view.findViewById(R.id.tv_picker_title);
+        tvTitle=contentView.findViewById(R.id.tv_picker_title);
         mDatePicker.setShowCurtain(false);
         mDatePicker.setShowCurtainBorder(false);
-        mDatePicker.setSelectedItemTextColor(getResources().getColor(R.color.green));
-        Date date=new Date();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(date.getTime());
-        mDatePicker.setMinDate(date.getTime());
+        mDatePicker.setSelectedItemTextColor(ContextCompat.getColor(mContext,R.color.green));
+
+        mDatePicker.setMinDate(minDate);
         tvDecide.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (listener != null) {
                     listener.onSelectListener(mDatePicker.getYear(), mDatePicker.getMonth(), mDatePicker.getDay()
-                    ,mDatePicker.getHour(),mDatePicker.getMinute());
+                            ,mDatePicker.getHour(),mDatePicker.getMinute());
                 }
                 dismiss();
 
@@ -96,28 +96,29 @@ public class DatePickerFiveDialogFragment extends DialogFragment {
         if (pickerTitle!=null){
             tvTitle.setText(pickerTitle);
         }
-        initChild();
-        return view;
+    }
+    public void setMinDate(long date) {
+     minDate=date;
+    }
+    public void  dismiss(){
+        if (alertDialog!=null){
+            alertDialog.dismiss();
+        }
     }
 
-    protected void initChild() {
+    public void  show(){
+        initView();
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        if (contentView != null) {
+            builder.setView(contentView);
+        }
+        alertDialog = builder.show();
+        //背景透明
+        alertDialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
 
-    }
-
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Dialog dialog = new Dialog(getActivity(), R.style.DatePickerBottomDialog);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // 设置Content前设定
-
-        dialog.setContentView(R.layout.dialog_picker_five);
-        dialog.setCanceledOnTouchOutside(true); // 外部点击取消
-
-        Window window = dialog.getWindow();
+        Window window = alertDialog.getWindow();
         if (window != null) {
-            if (mIsShowAnimation) {
-                window.getAttributes().windowAnimations = R.style.DatePickerDialogAnim;
-            }
+            window.getAttributes().windowAnimations = R.style.DatePickerDialogAnim;
             WindowManager.LayoutParams lp = window.getAttributes();
             lp.gravity = Gravity.BOTTOM; // 紧贴底部
             lp.width = WindowManager.LayoutParams.MATCH_PARENT; // 宽度持平
@@ -125,9 +126,9 @@ public class DatePickerFiveDialogFragment extends DialogFragment {
             window.setAttributes(lp);
             window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         }
-
-        return dialog;
+        alertDialog.show();
     }
+
 
     public void setSelectedDate(int year, int month, int day ) {
         mSelectedYear = year;
@@ -135,22 +136,12 @@ public class DatePickerFiveDialogFragment extends DialogFragment {
         mSelectedDay = day;
         setSelectedDate();
     }
-
-    /**
-     * 设置选中时间
-     * @param year
-     * @param month
-     * @param day
-     * @param hours
-     * @param minute
-     */
     public void setSelectedDate(int year, int month, int day,int hours,int minute) {
         mSelectedYear = year;
         mSelectedMonth = month;
         mSelectedDay = day;
         mSelectedHours=hours;
         mSelectedMinute=minute;
-
         setSelectedDate();
     }
 
@@ -167,5 +158,6 @@ public class DatePickerFiveDialogFragment extends DialogFragment {
     private  onSelectListener listener;
     public interface  onSelectListener{
         void  onSelectListener(int year, int month, int day, int hour, int minute);
+//        void  onSelectListenerToString(String year, String month,String day ,String hour,String minute);
     }
 }

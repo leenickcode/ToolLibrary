@@ -15,7 +15,6 @@ class TestActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_test)
-        startActivity(Intent())
 //        val list: MutableList<NineImageView.Picture> = mutableListOf()
 //        val picture = NineImageView.Picture()
 //        picture.resouceId = R.drawable.img_3

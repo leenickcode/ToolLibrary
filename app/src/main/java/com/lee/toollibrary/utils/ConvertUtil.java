@@ -131,7 +131,7 @@ public class ConvertUtil {
 
     /**
      * 根据日期得到周几
-     * @param dateString
+     * @param dateString  周几
      * @return
      */
     public static  String getWeek(String dateString){
@@ -146,7 +146,23 @@ public class ConvertUtil {
         String week = sdf.format(date);
         return week;
     }
-
+    /**
+     * 根据日期得到  星期几
+     * @param dateString 星期几
+     * @return
+     */
+    public static  String getWeek2(String dateString){
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");// 日期格式
+        Date date = null;
+        try {
+            date = format.parse(dateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
+        String week = sdf.format(date);
+        return week;
+    }
     /**
      * 将数字格式化  比如1 变成01
      * @param i

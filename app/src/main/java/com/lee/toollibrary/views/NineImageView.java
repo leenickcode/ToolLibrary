@@ -2,13 +2,11 @@ package com.lee.toollibrary.views;
 
 import android.content.Context;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
+import androidx.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-
-import com.lee.toollibrary.R;
 
 import java.util.List;
 

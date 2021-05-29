@@ -15,7 +15,7 @@ import android.util.AttributeSet;
  *  密码输入框
  * @author nick
  */
-public class PWView extends android.support.v7.widget.AppCompatEditText {
+public class PWView extends androidx.appcompat.widget.AppCompatEditText {
     /**
      * 密码长度 记得在xml里面配置最大长度
      */

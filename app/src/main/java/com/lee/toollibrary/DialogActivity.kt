@@ -1,7 +1,7 @@
 package com.lee.toollibrary
 
 import android.content.DialogInterface
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.lee.toollibrary.adapters.DialogAdapter
 import com.lee.toollibrary.dialogs.*
 import kotlinx.android.synthetic.main.activity_dialog.*

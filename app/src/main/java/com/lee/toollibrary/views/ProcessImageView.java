@@ -12,21 +12,22 @@ import android.widget.ImageView;
 
 /**
  * Created by nicklxz on 2017/11/21.
- *  * 进度条image view  一般用于上传暂时进度
+ *  * 进度条image view  一般用于上传展示进度
  */
 
 @SuppressLint("AppCompatCustomView")
 public class ProcessImageView extends ImageView {
 
     private Paint mPaint;// 画笔
+    private Paint mTextPaint;// 画笔
     int width = 0;
     int height = 0;
     Context context = null;
     int progress = 0;
-
+    Rect rectText = new Rect();
     public ProcessImageView(Context context) {
         super(context);
-        // TODO Auto-generated constructor stub
+
     }
 
     public ProcessImageView(Context context, AttributeSet attrs) {
@@ -38,6 +39,10 @@ public class ProcessImageView extends ImageView {
         super(context, attrs, defStyleAttr);
         this.context = context;
         mPaint = new Paint();
+        mTextPaint = new Paint();
+        mTextPaint.setTextSize(30);
+        mTextPaint.setColor(Color.parseColor("#FFFFFF"));
+        mTextPaint.setStrokeWidth(2);
     }
 
     @SuppressLint("DrawAllocation")
@@ -51,23 +56,19 @@ public class ProcessImageView extends ImageView {
         mPaint.setColor(Color.parseColor("#70000000"));// 半透明
         canvas.drawRect(0, 0, getWidth(), getHeight()- getHeight() * progress
                 / 100, mPaint);
-
         mPaint.setColor(Color.parseColor("#00000000"));// 全透明
         canvas.drawRect(0, getHeight() - getHeight() * progress / 100,
                 getWidth(), getHeight(), mPaint);
 
-        mPaint.setTextSize(30);
-        mPaint.setColor(Color.parseColor("#FFFFFF"));
-        mPaint.setStrokeWidth(2);
-        Rect rect = new Rect();
-        mPaint.getTextBounds("100%", 0, "100%".length(), rect);// 确定文字的宽度
+
+
+        mPaint.getTextBounds("100%", 0, "100%".length(), rectText);// 确定文字的宽度
         //根据进度画百分百
         if (progress==100){
         }else {
-            canvas.drawText(progress + "%", getWidth() / 2 - rect.width() / 2,
-                    getHeight() / 2, mPaint);
+            canvas.drawText(progress + "%", getWidth() / 2 - rectText.width() / 2,
+                    getHeight() / 2, mTextPaint);
         }
-
 
     }
 

@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.activity_process_image.*
  */
 class ProcessImageAty :BaseActivity() {
     override fun business() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 
     override fun getLayoutId(): Int {

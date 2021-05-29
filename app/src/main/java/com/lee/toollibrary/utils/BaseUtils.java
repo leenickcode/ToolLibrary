@@ -1,5 +1,7 @@
 package com.lee.toollibrary.utils;
 
+
+
 import android.app.Application;
 
 import com.lee.toollibrary.MyApplication;
@@ -13,3 +15,5 @@ public class BaseUtils {
     public static boolean     isDebug     =true;
 //    protected static boolean isDebug=false;
 }
+
+

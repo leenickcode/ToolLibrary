@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.View
 import android.view.Window
 import com.lee.toollibrary.utils.ConvertUtil
+import com.lee.toollibrary.utils.HiddenAnimUtils
 import com.lee.toollibrary.views.NineImageView
 import kotlinx.android.synthetic.main.activity_test.*
 
@@ -30,6 +31,10 @@ class TestActivity : AppCompatActivity() {
 //        nine.setTotalWidth( window.windowManager.defaultDisplay.width)
 //        nine.setPictures(list)
         var aa="2019-03-18"
+        button.setOnClickListener {
+
+            HiddenAnimUtils.newInstance(this,pinch,it,100).toggle()
+        }
         Log.d("aa",ConvertUtil.getWeek(aa))
     }
 }

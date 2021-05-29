@@ -258,7 +258,7 @@ public class IosDefaultDialog {
         if (height == 0) {
             lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         } else {
-            lp.height = (int) (height* height);
+            lp.height = (int) (this.height* height);
         }
         alertDialog.getWindow().setAttributes(lp);
     }

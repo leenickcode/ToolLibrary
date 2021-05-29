@@ -837,6 +837,11 @@ public class WheelPicker<T> extends View {
             currentPosition = 0;
         }
         if (mCurrentPosition == currentPosition) {
+            //这里要调一次监听，否则绘制position相同，
+            // 但是数据却不同，例如此时11月1日，position为0，我滑动月分，到10月，由于设置了10月31日开始，此时position也是0。
+            if (mOnWheelChangeListener != null) {
+                mOnWheelChangeListener.onWheelSelected(mDataList.get(currentPosition), currentPosition);
+            }
             return;
         }
         if (!mScroller.isFinished()) {

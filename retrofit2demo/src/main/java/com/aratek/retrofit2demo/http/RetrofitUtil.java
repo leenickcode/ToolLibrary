@@ -92,9 +92,9 @@ public class RetrofitUtil {
             OkHttpClient.Builder builder = new OkHttpClient.Builder()
                     .sslSocketFactory(sslSocketFactory)
                     .hostnameVerifier(org.apache.http.conn.ssl.SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-            builder.connectTimeout(20, TimeUnit.SECONDS)
-                    .writeTimeout(20, TimeUnit.SECONDS)
-                    .readTimeout(20, TimeUnit.SECONDS);
+            builder.connectTimeout(10, TimeUnit.SECONDS)
+                    .writeTimeout(10, TimeUnit.SECONDS)
+                    .readTimeout(10, TimeUnit.SECONDS);
 
             if (BuildConfig.DEBUG) {
             Log.d(TAG, "getUnsafeOkHttpClient: 网络请求日志");

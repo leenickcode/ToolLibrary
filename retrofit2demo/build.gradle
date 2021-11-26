@@ -36,7 +36,7 @@ android {
 }
 
 dependencies {
-
+    def lifecycle_version = "2.4.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.3.1'
     implementation 'androidx.appcompat:appcompat:1.2.0'
@@ -52,6 +52,15 @@ dependencies {
     // Retrofit库
     implementation 'com.squareup.retrofit2:retrofit:2.6.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.6.0'
-    //lifecycle和协程的扩展，用于将协程跟生命周期组件绑定
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.2.0'
+
+    //viewModel
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    // LiveData
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+    // Lifecycles only (without ViewModel or LiveData)
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
+
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
+    implementation 'com.blankj:utilcodex:1.30.6'
+
 }

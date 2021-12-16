@@ -1,7 +1,8 @@
-package com.aratek.retrofit2demo.http
+package com.example.arcmodekt.http
 
 import androidx.lifecycle.LiveData
-import com.aratek.retrofit2demo.models.User
+import com.example.arcmodekt.model.User
+
 import retrofit2.Call
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -25,6 +26,11 @@ interface WebService {
         @Field("password") password: String
     ): HttpResult<User?>
 
-
+    @FormUrlEncoded
+    @POST("user/login")
+     fun login2(
+        @Field("username") username: String,
+        @Field("password") password: String
+    ): LiveData<HttpResult<User?>>
 
 }

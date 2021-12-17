@@ -4,9 +4,7 @@ import android.annotation.SuppressLint;
 import android.util.Log;
 
 
-import com.aratek.retrofit2demo.BuildConfig;
-import com.aratek.retrofit2demo.http.LiveDataCallAdapterFactory;
-import com.aratek.retrofit2demo.http.WebService;
+import com.example.arcmodekt.BuildConfig;
 
 import org.json.JSONObject;
 

@@ -1,6 +1,7 @@
 package com.example.arcmodekt.http
 
 import androidx.lifecycle.LiveData
+import com.example.arcmodekt.model.BaseBean
 import com.example.arcmodekt.model.User
 
 import retrofit2.Call
@@ -24,13 +25,13 @@ interface WebService {
     suspend fun login(
         @Field("username") username: String,
         @Field("password") password: String
-    ): HttpResult<User?>
+    ): ApiResponse<User?>
 
     @FormUrlEncoded
     @POST("user/login")
      fun login2(
         @Field("username") username: String,
         @Field("password") password: String
-    ): LiveData<HttpResult<User?>>
+    ): LiveData<ApiResponse<BaseBean<User>>>
 
 }

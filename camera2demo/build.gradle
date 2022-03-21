@@ -4,12 +4,12 @@ plugins {
 }
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 29
 
     defaultConfig {
         applicationId "com.example.camera2demo"
         minSdkVersion 23
-        targetSdkVersion 30
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
 
@@ -28,6 +28,9 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+    viewBinding {
+        enabled = true
     }
 }
 

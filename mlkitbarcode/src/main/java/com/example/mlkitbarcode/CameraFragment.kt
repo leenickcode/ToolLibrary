@@ -49,7 +49,7 @@ class CameraFragment : Fragment() {
 
     private var imageCapture: ImageCapture? = null
 
-    private lateinit var outputDirectory: File
+
     private lateinit var cameraExecutor: ExecutorService
     val options = BarcodeScannerOptions.Builder()
         .setBarcodeFormats(
@@ -106,10 +106,7 @@ class CameraFragment : Fragment() {
                 requireActivity(), REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
         }
 
-        // Set up the listener for take photo button
-//        binding.cameraCaptureButton.setOnClickListener { takePhoto() }
 
-        outputDirectory = getOutputDirectory()
 
         cameraExecutor = Executors.newSingleThreadExecutor()
 
@@ -241,12 +238,7 @@ class CameraFragment : Fragment() {
             requireContext(), it) == PackageManager.PERMISSION_GRANTED
     }
 
-    private fun getOutputDirectory(): File {
-        val mediaDir = requireActivity().externalMediaDirs.firstOrNull()?.let {
-            File(it, resources.getString(R.string.app_name)).apply { mkdirs() } }
-        return if (mediaDir != null && mediaDir.exists())
-            mediaDir else requireActivity().filesDir
-    }
+
 
     override fun onDestroy() {
         super.onDestroy()

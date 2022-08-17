@@ -3,13 +3,10 @@ package com.example.camera2demo
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import java.io.File
-import java.text.SimpleDateFormat
-import java.util.*
 
 private const val PERMISSIONS_REQUEST_CODE = 10
 private val PERMISSIONS_REQUIRED = arrayOf(Manifest.permission.CAMERA)
@@ -20,7 +17,7 @@ class MainActivity : AppCompatActivity() {
 
         if (hasPermissions(this)) {
             // If permissions have already been granted, proceed
-            val  fragment = CameraFragment()
+            val  fragment = CameraFragment2()
             getSupportFragmentManager().beginTransaction().replace(R.id.fragmentd,fragment).commit()
         } else {
             // Request camera-related permissions

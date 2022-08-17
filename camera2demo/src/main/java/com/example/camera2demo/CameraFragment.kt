@@ -2,33 +2,21 @@ package com.example.camera2demo
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.ImageFormat
 import android.hardware.camera2.*
-import android.hardware.camera2.params.InputConfiguration
-import android.hardware.camera2.params.OutputConfiguration
-import android.hardware.camera2.params.SessionConfiguration
 import android.media.Image
 import android.media.ImageReader
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
 import android.util.Log
 import android.view.*
-import android.widget.ImageButton
-import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.graphics.drawable.toDrawable
-import androidx.exifinterface.media.ExifInterface
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
-import com.example.android.camera.utils.AutoFitSurfaceView
 import com.example.android.camera.utils.OrientationLiveData
-import com.example.android.camera.utils.computeExifOrientation
 import com.example.android.camera.utils.getPreviewOutputSize
 import com.example.camera2demo.databinding.FragmentCameraBinding
 import kotlinx.coroutines.Dispatchers
@@ -36,13 +24,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.io.Closeable
 import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.ArrayBlockingQueue
-import java.util.concurrent.Executor
-import java.util.concurrent.TimeoutException
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
@@ -79,7 +62,7 @@ class CameraFragment  :Fragment(){
      */
     private val jpegSurface: Surface? = null
 
-    /** Performs recording animation of flashing screen */
+    /** 拍照的屏幕闪烁动画 */
     private val animationTask: Runnable by lazy {
         Runnable {
             // Flash white animation
@@ -91,7 +74,7 @@ class CameraFragment  :Fragment(){
             }, ANIMATION_FAST_MILLIS)
         }
     }
-    /** [CameraCharacteristics] corresponding to the provided Camera ID */
+    /** [CameraCharacteristics] 表示指定相机的相关参数信息  */
     private val characteristics: CameraCharacteristics by lazy {
         cameraManager!!.getCameraCharacteristics(frontCameraId)
     }
@@ -110,6 +93,7 @@ class CameraFragment  :Fragment(){
             android.Manifest.permission.WRITE_EXTERNAL_STORAGE
         )
         /** Maximum number of images that will be held in the reader's buffer */
+        /**  iamge 缓存的最大帧数 数据 */
         private const val IMAGE_BUFFER_SIZE: Int = 3
         const val ANIMATION_FAST_MILLIS = 50L
 
@@ -146,6 +130,7 @@ class CameraFragment  :Fragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        //在SurfaceView 的SurfaceHolder 构建好了再去初始化相机，更安全
         fragmentCameraBinding.viewFinder.holder.addCallback(object : SurfaceHolder.Callback {
             override fun surfaceDestroyed(holder: SurfaceHolder) = Unit
 
@@ -248,56 +233,59 @@ class CameraFragment  :Fragment(){
         val targets = listOf(fragmentCameraBinding.viewFinder.holder.surface, imageReader.surface)
 
         // Start a capture session using our open camera and list of Surfaces where frames will go
+        //创建一个通道， 用于处理  capture 请求和响应
         session = createCaptureSession(cameraDevice, targets, cameraHandler)
-
+        //创建一个用于预览的请求，并将这个请求返回的结果展示在surface  view 上。
         val captureRequest = cameraDevice.createCaptureRequest(
             CameraDevice.TEMPLATE_PREVIEW).apply { addTarget(fragmentCameraBinding.viewFinder.holder.surface) }
 
         // This will keep sending the capture request as frequently as possible until the
         // session is torn down or session.stopRepeating() is called
+        //setRepeatingRequest 会无限重发，直到 session销毁 或者调用了 session.stopRepeating()
         session.setRepeatingRequest(captureRequest.build(), null, cameraHandler)
 
-        // Listen to the capture button
-        fragmentCameraBinding.captureButton.setOnClickListener {
-
-            // Disable click listener to prevent multiple requests simultaneously in flight
-            it.isEnabled = false
-
-            // Perform I/O heavy operations in a different scope
-            lifecycleScope.launch(Dispatchers.IO) {
-                takePhoto().use { result ->
-                    Log.d(TAG, "Result received: $result")
-
-                    // Save the result to disk
-                    val output = saveResult(result)
-                    Log.d(TAG, "Image saved: ${output.absolutePath}")
-
-                    // If the result is a JPEG file, update EXIF metadata with orientation info
-                    if (output.extension == "jpg") {
-                        val exif = ExifInterface(output.absolutePath)
-                        exif.setAttribute(
-                            ExifInterface.TAG_ORIENTATION, result.orientation.toString())
-                        exif.saveAttributes()
-                        Log.d(TAG, "EXIF metadata saved: ${output.absolutePath}")
-                    }
-
-                    // Display the photo taken to user
-                    lifecycleScope.launch(Dispatchers.Main) {
-                        (requireActivity() as
-                               MainActivity).showImage(output.absolutePath)
-                    }
-                }
-
-                // Re-enable click listener after photo is taken
-                it.post { it.isEnabled = true }
-            }
-        }
+//        // 监听拍照按钮
+//        fragmentCameraBinding.captureButton.setOnClickListener {
+//
+//            // 禁止拍照过长中重复点击
+//            it.isEnabled = false
+//
+//            // Perform I/O heavy operations in a different scope
+//            lifecycleScope.launch(Dispatchers.IO) {
+//                takePhoto().use { result ->
+//                    Log.d(TAG, "Result received: $result")
+//
+//                    // Save the result to disk
+//                    val output = saveResult(result)
+//                    Log.d(TAG, "Image saved: ${output.absolutePath}")
+//
+//                    // If the result is a JPEG file, update EXIF metadata with orientation info
+//                    if (output.extension == "jpg") {
+//                        val exif = ExifInterface(output.absolutePath)
+//                        exif.setAttribute(
+//                            ExifInterface.TAG_ORIENTATION, result.orientation.toString())
+//                        exif.saveAttributes()
+//                        Log.d(TAG, "EXIF metadata saved: ${output.absolutePath}")
+//                    }
+//
+//                    // Display the photo taken to user
+//                    lifecycleScope.launch(Dispatchers.Main) {
+//                        (requireActivity() as
+//                               MainActivity).showImage(output.absolutePath)
+//                    }
+//                }
+//
+//                // Re-enable click listener after photo is taken
+//                it.post { it.isEnabled = true }
+//            }
+//        }
 
     }
 
     /**
      * Starts a [CameraCaptureSession] and returns the configured session (as the result of the
      * suspend coroutine
+     *
      */
     private suspend fun createCaptureSession(
         device: CameraDevice,
@@ -319,131 +307,131 @@ class CameraFragment  :Fragment(){
         }, handler)
     }
 
-    /**
-     * Helper function used to capture a still image using the [CameraDevice.TEMPLATE_STILL_CAPTURE]
-     * template. It performs synchronization between the [CaptureResult] and the [Image] resulting
-     * from the single capture, and outputs a [CombinedCaptureResult] object.
-     */
-    private suspend fun takePhoto():
-            CombinedCaptureResult = suspendCoroutine { cont ->
-
-        // Flush any images left in the image reader
-        @Suppress("ControlFlowWithEmptyBody")
-        while (imageReader.acquireNextImage() != null) {
-        }
-
-        // Start a new image queue
-        val imageQueue = ArrayBlockingQueue<Image>(IMAGE_BUFFER_SIZE)
-        imageReader.setOnImageAvailableListener({ reader ->
-            val image = reader.acquireNextImage()
-            Log.d(TAG, "Image available in queue: ${image.timestamp}")
-            imageQueue.add(image)
-        }, imageReaderHandler)
-
-        val captureRequest = session.device.createCaptureRequest(
-            CameraDevice.TEMPLATE_STILL_CAPTURE).apply { addTarget(imageReader.surface) }
-        session.capture(captureRequest.build(), object : CameraCaptureSession.CaptureCallback() {
-
-            override fun onCaptureStarted(
-                session: CameraCaptureSession,
-                request: CaptureRequest,
-                timestamp: Long,
-                frameNumber: Long) {
-                super.onCaptureStarted(session, request, timestamp, frameNumber)
-                fragmentCameraBinding.viewFinder.post(animationTask)
-            }
-
-            override fun onCaptureCompleted(
-                session: CameraCaptureSession,
-                request: CaptureRequest,
-                result: TotalCaptureResult) {
-                super.onCaptureCompleted(session, request, result)
-                val resultTimestamp = result.get(CaptureResult.SENSOR_TIMESTAMP)
-                Log.d(TAG, "Capture result received: $resultTimestamp")
-
-                // Set a timeout in case image captured is dropped from the pipeline
-                val exc = TimeoutException("Image dequeuing took too long")
-                val timeoutRunnable = Runnable { cont.resumeWithException(exc) }
-                imageReaderHandler.postDelayed(timeoutRunnable, IMAGE_CAPTURE_TIMEOUT_MILLIS)
-
-                // Loop in the coroutine's context until an image with matching timestamp comes
-                // We need to launch the coroutine context again because the callback is done in
-                //  the handler provided to the `capture` method, not in our coroutine context
-                @Suppress("BlockingMethodInNonBlockingContext")
-                lifecycleScope.launch(cont.context) {
-                    while (true) {
-
-                        // Dequeue images while timestamps don't match
-                        val image = imageQueue.take()
-                        // TODO(owahltinez): b/142011420
-                        // if (image.timestamp != resultTimestamp) continue
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q &&
-                            image.format != ImageFormat.DEPTH_JPEG &&
-                            image.timestamp != resultTimestamp) continue
-                        Log.d(TAG, "Matching image dequeued: ${image.timestamp}")
-
-                        // Unset the image reader listener
-                        imageReaderHandler.removeCallbacks(timeoutRunnable)
-                        imageReader.setOnImageAvailableListener(null, null)
-
-                        // Clear the queue of images, if there are left
-                        while (imageQueue.size > 0) {
-                            imageQueue.take().close()
-                        }
-
-                        // Compute EXIF orientation metadata
-                        val rotation = relativeOrientation.value ?: 0
-                        val mirrored = characteristics.get(CameraCharacteristics.LENS_FACING) ==
-                                CameraCharacteristics.LENS_FACING_FRONT
-                        val exifOrientation = computeExifOrientation(rotation, mirrored)
-
-                        // Build the result and resume progress
-                        cont.resume(CombinedCaptureResult(
-                            image, result, exifOrientation, imageReader.imageFormat))
-
-                        // There is no need to break out of the loop, this coroutine will suspend
-                    }
-                }
-            }
-        }, cameraHandler)
-    }
-    /** Helper function used to save a [CombinedCaptureResult] into a [File] */
-    private suspend fun saveResult(result: CombinedCaptureResult): File = suspendCoroutine { cont ->
-        when (result.format) {
-
-            // When the format is JPEG or DEPTH JPEG we can simply save the bytes as-is
-            ImageFormat.JPEG, ImageFormat.DEPTH_JPEG -> {
-                val buffer = result.image.planes[0].buffer
-                val bytes = ByteArray(buffer.remaining()).apply { buffer.get(this) }
-                try {
-                    val output = createFile(requireContext(), "jpg")
-                    FileOutputStream(output).use { it.write(bytes) }
-                    cont.resume(output)
-                } catch (exc: IOException) {
-                    Log.e(TAG, "Unable to write JPEG image to file", exc)
-                    cont.resumeWithException(exc)
-                }
-            }
-
-            // When the format is RAW we use the DngCreator utility library
-            ImageFormat.RAW_SENSOR -> {
-                val dngCreator = DngCreator(characteristics, result.metadata)
-                try {
-                    val output = createFile(requireContext(), "dng")
-                    FileOutputStream(output).use { dngCreator.writeImage(it, result.image) }
-                    cont.resume(output)
-                } catch (exc: IOException) {
-                    Log.e(TAG, "Unable to write DNG image to file", exc)
-                    cont.resumeWithException(exc)
-                }
-            }
-
-            // No other formats are supported by this sample
-            else -> {
-                val exc = RuntimeException("Unknown image format: ${result.image.format}")
-                Log.e(TAG, exc.message, exc)
-                cont.resumeWithException(exc)
-            }
-        }
-    }
+//    /**
+//     * Helper function used to capture a still image using the [CameraDevice.TEMPLATE_STILL_CAPTURE]
+//     * template. It performs synchronization between the [CaptureResult] and the [Image] resulting
+//     * from the single capture, and outputs a [CombinedCaptureResult] object.
+//     */
+//    private suspend fun takePhoto():
+//            CombinedCaptureResult = suspendCoroutine { cont ->
+//
+//        // Flush any images left in the image reader
+//        @Suppress("ControlFlowWithEmptyBody")
+//        while (imageReader.acquireNextImage() != null) {
+//        }
+//
+//        // Start a new image queue
+//        val imageQueue = ArrayBlockingQueue<Image>(IMAGE_BUFFER_SIZE)
+//        imageReader.setOnImageAvailableListener({ reader ->
+//            val image = reader.acquireNextImage()
+//            Log.d(TAG, "Image available in queue: ${image.timestamp}")
+//            imageQueue.add(image)
+//        }, imageReaderHandler)
+//
+//        val captureRequest = session.device.createCaptureRequest(
+//            CameraDevice.TEMPLATE_STILL_CAPTURE).apply { addTarget(imageReader.surface) }
+//        session.capture(captureRequest.build(), object : CameraCaptureSession.CaptureCallback() {
+//
+//            override fun onCaptureStarted(
+//                session: CameraCaptureSession,
+//                request: CaptureRequest,
+//                timestamp: Long,
+//                frameNumber: Long) {
+//                super.onCaptureStarted(session, request, timestamp, frameNumber)
+//                fragmentCameraBinding.viewFinder.post(animationTask)
+//            }
+//
+//            override fun onCaptureCompleted(
+//                session: CameraCaptureSession,
+//                request: CaptureRequest,
+//                result: TotalCaptureResult) {
+//                super.onCaptureCompleted(session, request, result)
+//                val resultTimestamp = result.get(CaptureResult.SENSOR_TIMESTAMP)
+//                Log.d(TAG, "Capture result received: $resultTimestamp")
+//
+//                // Set a timeout in case image captured is dropped from the pipeline
+//                val exc = TimeoutException("Image dequeuing took too long")
+//                val timeoutRunnable = Runnable { cont.resumeWithException(exc) }
+//                imageReaderHandler.postDelayed(timeoutRunnable, IMAGE_CAPTURE_TIMEOUT_MILLIS)
+//
+//                // Loop in the coroutine's context until an image with matching timestamp comes
+//                // We need to launch the coroutine context again because the callback is done in
+//                //  the handler provided to the `capture` method, not in our coroutine context
+//                @Suppress("BlockingMethodInNonBlockingContext")
+//                lifecycleScope.launch(cont.context) {
+//                    while (true) {
+//
+//                        // Dequeue images while timestamps don't match
+//                        val image = imageQueue.take()
+//                        // TODO(owahltinez): b/142011420
+//                        // if (image.timestamp != resultTimestamp) continue
+//                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q &&
+//                            image.format != ImageFormat.DEPTH_JPEG &&
+//                            image.timestamp != resultTimestamp) continue
+//                        Log.d(TAG, "Matching image dequeued: ${image.timestamp}")
+//
+//                        // Unset the image reader listener
+//                        imageReaderHandler.removeCallbacks(timeoutRunnable)
+//                        imageReader.setOnImageAvailableListener(null, null)
+//
+//                        // Clear the queue of images, if there are left
+//                        while (imageQueue.size > 0) {
+//                            imageQueue.take().close()
+//                        }
+//
+//                        // Compute EXIF orientation metadata
+//                        val rotation = relativeOrientation.value ?: 0
+//                        val mirrored = characteristics.get(CameraCharacteristics.LENS_FACING) ==
+//                                CameraCharacteristics.LENS_FACING_FRONT
+//                        val exifOrientation = computeExifOrientation(rotation, mirrored)
+//
+//                        // Build the result and resume progress
+//                        cont.resume(CombinedCaptureResult(
+//                            image, result, exifOrientation, imageReader.imageFormat))
+//
+//                        // There is no need to break out of the loop, this coroutine will suspend
+//                    }
+//                }
+//            }
+//        }, cameraHandler)
+//    }
+//    /** Helper function used to save a [CombinedCaptureResult] into a [File] */
+//    private suspend fun saveResult(result: CombinedCaptureResult): File = suspendCoroutine { cont ->
+//        when (result.format) {
+//
+//            // When the format is JPEG or DEPTH JPEG we can simply save the bytes as-is
+//            ImageFormat.JPEG, ImageFormat.DEPTH_JPEG -> {
+//                val buffer = result.image.planes[0].buffer
+//                val bytes = ByteArray(buffer.remaining()).apply { buffer.get(this) }
+//                try {
+//                    val output = createFile(requireContext(), "jpg")
+//                    FileOutputStream(output).use { it.write(bytes) }
+//                    cont.resume(output)
+//                } catch (exc: IOException) {
+//                    Log.e(TAG, "Unable to write JPEG image to file", exc)
+//                    cont.resumeWithException(exc)
+//                }
+//            }
+//
+//            // When the format is RAW we use the DngCreator utility library
+//            ImageFormat.RAW_SENSOR -> {
+//                val dngCreator = DngCreator(characteristics, result.metadata)
+//                try {
+//                    val output = createFile(requireContext(), "dng")
+//                    FileOutputStream(output).use { dngCreator.writeImage(it, result.image) }
+//                    cont.resume(output)
+//                } catch (exc: IOException) {
+//                    Log.e(TAG, "Unable to write DNG image to file", exc)
+//                    cont.resumeWithException(exc)
+//                }
+//            }
+//
+//            // No other formats are supported by this sample
+//            else -> {
+//                val exc = RuntimeException("Unknown image format: ${result.image.format}")
+//                Log.e(TAG, exc.message, exc)
+//                cont.resumeWithException(exc)
+//            }
+//        }
+//    }
 }

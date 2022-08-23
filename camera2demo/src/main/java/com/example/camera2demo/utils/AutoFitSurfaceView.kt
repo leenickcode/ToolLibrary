@@ -44,6 +44,7 @@ class AutoFitSurfaceView @JvmOverloads constructor(
     fun setAspectRatio(width: Int, height: Int) {
         require(width > 0 && height > 0) { "Size cannot be negative" }
         aspectRatio = width.toFloat() / height.toFloat()
+        //设置最终接受到的预览数据的宽高
         holder.setFixedSize(width, height)
         requestLayout()
     }
@@ -55,7 +56,6 @@ class AutoFitSurfaceView @JvmOverloads constructor(
         if (aspectRatio == 0f) {
             setMeasuredDimension(width, height)
         } else {
-
             // Performs center-crop transformation of the camera frames
             val newWidth: Int
             val newHeight: Int

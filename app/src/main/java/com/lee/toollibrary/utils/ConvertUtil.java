@@ -41,14 +41,29 @@ public class ConvertUtil {
 
 
     /**
-     * 将多个字节按高低拼接，低位在前  例如 getMergeByte（0,1） 结果为2^16
+     * 将多个字节按 高低拼接，低位在前  例如 0A00  例如 getMergeByte（00,01）   结果为 256
      * @param value
      * @return
+     * @deprecated
      */
     public static int getMergeByte(int...value){
         int number=value[0]&0xff;
         for (int i = 1; i <value.length ; i++) {
           number= number|((value[i]&0xff)<<(i*8));
+        }
+        return number;
+    }
+
+    /**
+     * 将多个字节按高低拼接，低位在前  例如 计算0100    getMergeByte（0,1）= 256
+     * @param hexString 16进制的字符串
+     * @return 10进制的结果
+     */
+    public static int getMergeByte(String...hexString){
+
+        int number=Integer.parseInt(hexString[0],16)&0xff;
+        for (int i = 1; i <hexString.length ; i++) {
+            number= number|((Integer.parseInt(hexString[i],16)&0xff)<<(i*8));
         }
         return number;
     }

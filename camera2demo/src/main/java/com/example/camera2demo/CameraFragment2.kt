@@ -2,6 +2,7 @@ package com.example.camera2demo
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.ImageFormat
 import android.hardware.camera2.*
@@ -13,6 +14,7 @@ import android.view.*
 import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.Fragment
 import com.example.camera2demo.databinding.FragmentCameraBinding
+import java.nio.ByteBuffer
 
 /**
  * Created by nicklee on 2022/8/16.
@@ -232,7 +234,14 @@ class CameraFragment2 : Fragment() {
                request: CaptureRequest,
                result: TotalCaptureResult
            ) {
+
                super.onCaptureCompleted(session, request, result)
+               val image=imageReader.acquireNextImage()
+               val buffer: ByteBuffer = image.getPlanes().get(0).getBuffer()
+               val bytes = ByteArray(buffer.remaining())
+               buffer[bytes]
+
+               val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size, null)
                Log.d(TAG, "onCaptureCompleted: 拍照完成")
            }
 
@@ -242,7 +251,7 @@ class CameraFragment2 : Fragment() {
                failure: CaptureFailure
            ) {
                super.onCaptureFailed(session, request, failure)
-               Log.e(TAG, "onCaptureFailed: 拍照失败", )
+               Log.e(TAG, "onCaptureFailed: 拍照失败")
            }
        },null)
     }
@@ -280,6 +289,7 @@ class CameraFragment2 : Fragment() {
 
             Log.d(TAG, "initImageReader: 格式"+image.format)
             Log.d(TAG, "initImageReader: width="+image.width+" height="+image.height)
+
             image.close()
         }, null)
     }
